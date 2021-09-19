@@ -46,4 +46,5 @@ jobs:
       - name: Get API Gatewway URL
         run: echo "APIGW_URL=$(terraform output -raw base_url)" >> $GITHUB_ENV
       - name: Test deployed Lambda through API Gatewway
-        run: test "$(curl ${{ env.APIGW_URL }})" = '{"Hello": "World"}'
+        run: >
+          test "$(curl ${{ env.APIGW_URL }})" = "{\"Hello\": \"World\"}"
