@@ -15,7 +15,7 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.8'
-      - name: run unittest
+      - name: Run UnitTest
         run: python -m unittest discover src/test
   deploy:
     runs-on: ubuntu-latest
@@ -28,6 +28,7 @@ jobs:
       AWS_DEFAULT_REGION: 'ca-central-1'
       AWS_DEFAULT_OUTPUT: 'json'
     steps:
+      - uses: actions/checkout@v2
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
