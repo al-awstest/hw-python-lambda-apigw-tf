@@ -22,7 +22,7 @@ jobs:
     name: Deploy changes with Terraform
     environment:
       name: DEV
-      url: ${{ env.APIGW_URL }}
+      url: https://471z85zhyf.execute-api.ca-central-1.amazonaws.com/
     needs: test
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AwsAccessKeyId }}
@@ -43,8 +43,6 @@ jobs:
         run: terraform plan -no-color
       - name: Terraform apply
         run: terraform apply -auto-approve -no-color
-      - name: Get API Gatewway URL
-        run: echo "APIGW_URL=${$(terraform output -raw base_url):0:-18}" #>> $GITHUB_ENV
-      # - name: Test deployed Lambda through API Gatewway
-      #   run: >
-      #     test "$(curl ${{ env.APIGW_URL }})" = "{\"Hello\": \"World\"}"
+      - name: Test deployed Lambda through API Gatewway
+        run: >
+          test "$(curl https://471z85zhyf.execute-api.ca-central-1.amazonaws.com/)" = "{\"Hello\": \"World\"}"
