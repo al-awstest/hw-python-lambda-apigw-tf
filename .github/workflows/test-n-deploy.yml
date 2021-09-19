@@ -14,19 +14,23 @@ jobs:
       - name: Setup Python3
         uses: actions/setup-python@v2
         with:
-          python-version: '3.8'
+          python-version: "3.8"
       - name: Run UnitTest
         run: python -m unittest discover src/test
   deploy:
     runs-on: ubuntu-latest
     name: Deploy changes with Terraform
-    environment: DEV
+    environment:
+      name: DEV
+      url: ${{ steps.getapigwurl.output.url }}
     needs: test
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AwsAccessKeyId }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AwsSecretAccessKey }}
-      AWS_DEFAULT_REGION: 'ca-central-1'
-      AWS_DEFAULT_OUTPUT: 'json'
+      AWS_DEFAULT_REGION: "ca-central-1"
+      AWS_DEFAULT_OUTPUT: "json"
+    outputs:
+      apigw_url: ${{ steps.getapigwurl.output.url }}
     steps:
       - uses: actions/checkout@v2
       - name: Setup Terraform
@@ -35,5 +39,11 @@ jobs:
           terraform_version: 1.0.7
       - name: Terraform Init
         run: terraform init
+      - name: Terraform Validate
+        run: terraform validate -no-color
       - name: Terraform plan
         run: terraform plan -no-color
+      - name: Terraform apply
+        run: terraform apply -auto-approve -no-color
+      - id: getapigwurl
+        run: echo "::set-output name=url::$(terraform output -raw base_url)"
