@@ -22,15 +22,13 @@ jobs:
     name: Deploy changes with Terraform
     environment:
       name: DEV
-      url: ${{ steps.getapigwurl.output.url }}
+      url: ${{ env.APIGW_URL }}
     needs: test
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AwsAccessKeyId }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AwsSecretAccessKey }}
       AWS_DEFAULT_REGION: "ca-central-1"
       AWS_DEFAULT_OUTPUT: "json"
-    outputs:
-      apigw_url: ${{ steps.getapigwurl.output.url }}
     steps:
       - uses: actions/checkout@v2
       - name: Setup Terraform
@@ -45,5 +43,7 @@ jobs:
         run: terraform plan -no-color
       - name: Terraform apply
         run: terraform apply -auto-approve -no-color
-      - id: getapigwurl
-        run: echo "::set-output name=url::$(terraform output -raw base_url)"
+      - name: Get API Gatewway URL
+        run: echo "APIGW_URL=$(terraform output -raw base_url)" >> $GITHUB_ENV
+      - name: Test deployed Lambda through API Gatewway
+        run: test "$(curl ${{ env.APIGW_URL }})" = '{"Hello": "World"}'
