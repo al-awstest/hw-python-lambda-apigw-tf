@@ -12,6 +12,6 @@ python3 -m unittest discover src/test
 ```
 Lambda Function can be tested locally with:
 ```bash
-python3 -m unittest discover src/test
+pip3 install python-lambda-local
 python-lambda-local -f lambda_handler src/hello-world/lambda_function.py src/test/event.json
 ```
