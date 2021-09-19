@@ -1,3 +1,6 @@
+<p align="left">
+  <a href="https://github.com/al-awstest/hw-python-lambda-apigw-tf/actions"><img alt="CI/CD" src="https://github.com/al-awstest/hw-python-lambda-apigw-tf/workflows/Test%20and%20deploy%20to%20AWS/badge.svg" /></a>
+</p>
 ### python3 hello-world
 #### in AWS Lambda Function with API Gateway
 ##### built and deployed with GitHub Actions using Terraform
